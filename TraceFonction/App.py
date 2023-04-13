@@ -1,4 +1,5 @@
 from tkinter import *
+from math import *
 
 fenetre=Tk()
 fenetre.title("Trace fonction")
@@ -51,8 +52,26 @@ def tracer():
     xmax = int(entry_xmax.get())
     ymin = int(entry_ymin.get())
     ymax = int(entry_ymax.get())
+
+    def toPixX(x):
+        return x * (W  / (xmax - xmin)) - xmin * (W  / (xmax - xmin))
+    def toPixY(y):
+        return - y * (H / (ymax - ymin)) + ymax * (H  / (ymax - ymin))
+
+    def f(x):
+        return eval(entry_fonction.get())
+
     canvas.create_rectangle(0, 0, W, H, fill="white")
-    canvas.create_line(10,10,100,300)
+    canvas.create_line(0,toPixY(0),W,toPixY(0))
+    canvas.create_line(toPixX(0),0,toPixX(0),W)
+
+    n = W
+    for i in range(n):
+        xA = xmin + (i / n) * (xmax - xmin)
+        xB = xmin + ((i + 1) / n) * (xmax - xmin)
+        yA = f(xA)
+        yB = f(xB)
+        canvas.create_line(toPixX(xA),toPixY(yA),toPixX(xB),toPixY(yB))
 
 button_tracer=Button(fenetre,text="Tracer",command=tracer)
 button_tracer.place(x=180,y=50)
